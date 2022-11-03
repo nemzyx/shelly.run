@@ -1,3 +1,5 @@
+// TO DO: make undo() function, keep everything on window in a stack, remove last added
+
 const list = (obj) => {
   // https://developer.chrome.com/docs/devtools/console/format-style/
   const dimText = (str) => `\x1B[37m${str}\x1B[m`

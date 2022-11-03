@@ -80,5 +80,70 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
 <img src="images/animation.gif" alt="shelly animation" height=60>
 <br/>
 
+## Roadmap:
+* [x] Reactive browser console (control shelly from console)
+* [x] Cute animations 😍🐢
+* [x] [Alpha version is online!](https://shelly.run/)
+* [ ] **Map screen space to world space**
+* [ ] Make `walk()` and `run()` distance parameters work
+* [ ] Add `shelly.paint()` for tracing (`canvas API`)
+* [ ] Make it ***pretty*** so people can create and post [art](https://startdreambig.org/wp-content/uploads/2019/07/graphic8.png)
+* [ ] Create a [website](https://kran.ai/ideas/) for everyone to post their art
+* [ ] Add [interactive](https://github.com/rgossiaux/svelte-headlessui) tutorial and difficulties
+  * **Intro**: instructions to open console
+  * **Noob**: using functions, mutating variables
+  * **Turtle master**: turtle graphics! Loops etc.
+  * ***HACKER*** 😈: using `list()` and modifying variables directly to do anything.
+  <br/>
+  Browse server files, change shelly sprites etc. JavaScript is the limit
+  <br/>
+  ...
+* [ ] Add `undo()` to shelly.shell.js, save all prompts in a stack
+* [ ] Improve `list()`
+
+## Some demo programs to try out
+*(Paste these in the browser console on [shelly.run](https://shelly.run/))*
+
+These would be considered difficulty of ***HACKER*** 😅 (hard)
+<br />
+It's just to show the reactive console 🐢
+<br />
+<br />
+
+###### Shelly animated:
+`shelly.walk()`, `shelly.run()`, `shelly.hide()` and `shelly.stay()`
+
+###### Shelly running:
+```javascript
+shelly.run()
+
+shelly.transform.rot = -30
+setInterval(()=>{
+    shelly.transform.pos.y += 1
+    shelly.transform.pos.x += 0.3
+}, 100)
+```
+
+###### Shelly running in circles:
+```javascript
+shelly.run()
+
+R=20
+fx=(t)=>(Math.cos(t)*R) + 50
+fy=(t)=>(Math.sin(t)*R) + 50
+
+t = 0
+setInterval(()=>{
+    shelly.transform.pos.x = fx(t)
+    shelly.transform.pos.y = fy(t)
+    t += 0.1
+    t %= Math.PI*2
+
+    shelly.transform.rot = (360/Math.PI*0.5)*t
+}, 100)
+```
+
+<br />
+
 ## License
 Distributed under **MPL-2.0**. See `LICENSE.txt`.
