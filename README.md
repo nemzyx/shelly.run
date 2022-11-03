@@ -24,22 +24,23 @@
   <img src="images/logo.png" alt="Logo" height="80">
   <h1>shelly.run</h1>
   <p>
-    Cute browser game that teaches coding fundamentals
+    Cute browser game that teaches coding fundamentals 
     <br />
-    with JavaScript and the browser console.
+    with JavaScript in the browser console.
   </p>
 </div>
 
 <!-- PLAY NOW -->
 <a href="https://shelly.run" target="_blank">
   <img src="https://img.shields.io/badge/Play_Now-4285F4?style=for-the-badge&amp;logo=Google-chrome&amp;logoColor=white" alt="Play now!">
+  <!-- <img src="https://img.shields.io/badge/web-Play_Now-4285F4?style=for-the-badge&amp;logo=Google-chrome&amp;logoColor=white" alt="Play now!"> -->
 </a>
 
 <br />
 <br />
 
 <!-- ## Subscribe!
-Learn JavaScript with Shelly and my **60 second tutorials**
+Learn `JavaScript` with Shelly and my **60 second tutorials**
 
 [![JS Shorts][YouTube.com]][YouTube-url]
 [![JS Shorts][TikTok.com]][TikTok-url]
@@ -51,8 +52,8 @@ Shelly will react to the functions and variables you invoke and modify.
 
 <img src="images/screenshot.gif" alt="shelly.run">
 
-One of the major technical innovations making shelly.run possible, is the reactive console bindings.
-Learn more about reactive browser console my seing it in action on this [Svelte REPL](https://svelte.dev/repl/9f63f38bedaa4d3faa27b99bbde4403e?version=3.24.1) or [Gist](https://gist.github.com/ferry-creator/625ef854a899653d5acf652b813f784f).
+One of the major technical innovations making shelly.run possible, is the *reactive console bindings*. <br />
+Learn more about **reactive browser console** by seing it in action on this [Svelte REPL](https://svelte.dev/repl/e139ee91c1834124a2dcf891c2049b83?version=3.52.0) or [Gist](https://gist.github.com/ferry-creator/625ef854a899653d5acf652b813f784f).
 
 See the `bindComponent.js` gist used in the wild on this repo, under `app/src/components/Shelly.svelte`
 
