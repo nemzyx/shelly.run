@@ -80,7 +80,7 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
 <img src="images/animation.gif" alt="shelly animation" height=60>
 <br/>
 
-## Roadmap:
+## Roadmap ⚡️
 * [x] Reactive browser console (control shelly from console)
 * [x] Cute animations 😍🐢
 * [x] [Alpha version is online!](https://shelly.run/)
@@ -99,6 +99,7 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
 * [ ] Add `undo()` to shelly.shell.js, save all prompts in a stack
 * [ ] Create a [website](https://kran.ai/ideas/) for everyone to post their art, online gallery
 * [ ] Improve `list()`
+* [ ] Modding community at [shelly.run/mods](https://shelly.run/mods)
 
 ## Some demo programs to try out
 *(Paste these in the browser console on [shelly.run](https://shelly.run/))*
