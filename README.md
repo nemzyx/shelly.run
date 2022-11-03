@@ -89,10 +89,10 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
 * [ ] Add `shelly.paint()` for tracing (`canvas API`)
 * [ ] Make it ***pretty*** so people can create and post [art](https://startdreambig.org/wp-content/uploads/2019/07/graphic8.png)
 * [ ] Add [interactive](https://github.com/rgossiaux/svelte-headlessui) tutorial and difficulties
-  1. **Intro**: instructions to open console
-  2. **Noob**: using functions, mutating variables
-  3. **Turtle master**: turtle graphics! Loops etc.
-  4. ***HACKER*** 😈: using `list()` and modifying variables directly to do anything.
+  * **Intro**: instructions to open console
+  * **Noob**: using functions, mutating variables
+  * **Turtle master**: turtle graphics! Loops etc.
+  * ***HACKER*** 😈: using `list()` and modifying variables directly to do anything.
   Browse server files, change shelly sprites etc. JavaScript is the limit
   <br/>
   ...
