@@ -94,7 +94,6 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
   * **Noob**: using functions, mutating variables
   * **Turtle master**: turtle graphics! Loops etc.
   * ***HACKER*** 😈: using `list()` and modifying variables directly to do anything.
-  <br/>
   Browse server files, change shelly sprites etc. JavaScript is the limit
   <br/>
   ...
