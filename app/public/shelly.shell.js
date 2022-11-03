@@ -3,7 +3,7 @@ const list = (obj) => {
   const dimText = (str) => `\x1B[37m${str}\x1B[m`
   const keyText = (str) => `\x1B[97;46m ${str} \x1B[m`
   const keyTxt2 = (str) => `\x1B[97;104m ${str} \x1B[m`
-  const availbl = (str) => `\x1B[102m ${str} \x1B[m`
+  const availbl = (str) => `\x1B[97;40m${str}\x1B[m`
   
   const pText = (args) => {
     const base = 'parameters'
@@ -83,8 +83,12 @@ const list = (obj) => {
     console.log(`\n\x1B[4m${dimText(`"${desc}"`)}\n\n`)
     console.groupEnd()
     console.log(keyTxt2("Available objects↓"))
-    console.log(`\x1B[1m${availbl(keys
-      .reduce((acc,cur) => `${acc}${cur}\n`,'').slice(0, -1))}\n\n`)
+    console.log(`%c\x1B[1m${availbl(keys
+      .reduce((acc,cur) => `${acc}\n ${cur} \n`,'').slice(0, -1))}\n\n`,
+      "font-size: 200%;")
+    // console.log(`%c${keys
+    //   .reduce((acc,cur) => `${acc} list(${cur}) \n\n`,'').slice(0, -1)}\n\n`,
+    //   "font-size: 120%; font-family: monospace; font-weight: bold;")
     return keys.reduce((acc,cur) => Object.assign(acc, {
       [cur]: window[cur]
     }),{})

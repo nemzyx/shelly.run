@@ -7,4 +7,27 @@ const sanitizeTransform = (transform) => ({
   }
 })
 
-export { sanitizeTransform }
+const defaultStates = (animations) => ({
+  "hide": {
+    msg: 'Shy shelly shell 🐢',
+    animation: animations.hide,
+    speed: 10
+  },
+  "idle": {
+    msg: 'Shelly is now idle 🐢',
+    animation: animations.idle,
+    speed: 20
+  },
+  "walk": {
+    msg: 'Walking...',
+    animation: animations.walk,
+    speed: 90
+  },
+  "run": {
+    msg: 'Running!',
+    animation: animations.run,
+    speed: 250
+  }
+})
+
+export { sanitizeTransform, defaultStates }

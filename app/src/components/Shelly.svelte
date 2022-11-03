@@ -1,5 +1,5 @@
 <script>
-  import { sanitizeTransform } from '../util/shelly'
+  import { sanitizeTransform, defaultStates } from '../util/shelly'
 
   import F0 from '../assets/shelly/shelly-F0.png'
   import F1 from '../assets/shelly/shelly-F1.png'
@@ -12,31 +12,11 @@
   const idle = [F6, F5, F5, F5, F5, F5, F5, F5, F5, F6, F5, F5, F5, F5, F5]
   const walk = [F3, F1, F4, F1]
   const run =  [F3, F2, F4, F2]
+  const animCollection = { hide, idle, walk, run }
 
   let color = 'rgb(160, 78, 122)' // #a04e7a
 
-  $: states = {
-    "hide": {
-      msg: 'Shy shelly shell 🐢',
-      animation: hide,
-      speed: 10
-    },
-    "idle": {
-      msg: 'Shelly is now idle 🐢',
-      animation: idle,
-      speed: 20
-    },
-    "walk": {
-      msg: 'Walking...',
-      animation: walk,
-      speed: 90
-    },
-    "run": {
-      msg: 'Running!',
-      animation: run,
-      speed: 250
-    }
-  }
+  $: states = defaultStates(animCollection)
 
   $: state = 'idle'
   $: speed = states[state].speed
@@ -109,7 +89,18 @@
     bindConsole(window["shelly"], 'transform', transform, (v) => {transform = v })
     bindConsole(window["shelly"], 'animation', animation, (v) => { animation = v })
 
-    window['states'] = states
+    window['states'] = {
+      ...states,
+      reset: () => {
+        console.log(defaultStates(animCollection))
+        window['states'] = {
+          ...defaultStates(animCollection),
+          reset: window['states'].reset
+        }
+        states = window['states']
+        return 'Reset back to default states'
+      }
+    }
     const tickSpeed = () => { window["shelly"].speed = states[state].speed }
     bindConsole(window["states"].run, 'speed', states.run.speed, tickSpeed)
     bindConsole(window["states"].walk, 'speed', states.walk.speed, tickSpeed)

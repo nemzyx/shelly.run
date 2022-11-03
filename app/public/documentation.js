@@ -15,7 +15,7 @@ const documentationObject = (() => {
         walk: {
           desc: "Walk forever, or for a number of units if specified in parameter",
           smpl: ["shelly.walk()", "shelly.walk(10)"],
-          args: ["distance", "wow"]
+          args: ["distance"]
         },
         run: {
           desc: "Run forever, or for a number of units if specified in parameter",
@@ -33,7 +33,13 @@ const documentationObject = (() => {
       // }]
     },
     states: {
-      functions: {},
+      functions: {
+        reset: {
+          desc: "If you modified the states object, this will get you back to default",
+          smpl: ["states.reset()"],
+          args: []
+        }
+      },
       variables: ['hide', 'idle', 'walk', 'run']
     }
   }
