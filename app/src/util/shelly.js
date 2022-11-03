@@ -1,11 +1,14 @@
-const sanitizeTransform = (transform) => ({
-  scl: transform.scl,
-  rot: transform.rot % 360,
-  pos: {
-    x: transform.pos.x % 100, // currently 100 = 0, not good.
-    y: transform.pos.y % 100  // currently 100 = 0, not good.
+const sanitizeTransform = (transform) => {
+  const { x, y } = transform.pos
+  return {
+    scl: transform.scl,
+    rot: transform.rot % 360,
+    pos: {
+      x: x < 0 ? 100 : x % 100,
+      y: y < 0 ? 100 : y % 100
+    }
   }
-})
+}
 
 const defaultStates = (animations) => ({
   "hide": {
