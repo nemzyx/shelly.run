@@ -21,6 +21,17 @@ const list = (obj) => {
     }
     return str
   }
+  
+  // const deepVariables = (input, obj) => {
+  //   return input.reduce((acc,cur) => {
+  //     if(typeof cur === 'string') {
+  //       return Object.assign(acc, { [cur]: x.obj[cur] }) 
+  //     } else {
+  //       const deepKey = Object.keys(cur)[0]
+  //       return Object.assign(acc, { [deepKey]: deepVariables(cur[deepKey], obj) })
+  //     }
+  //   },{})
+  // }
 
   const keys = Object.keys(documentationObject)
   objKey = keys.find(x => objToStr(window[x]) === objToStr(obj))
@@ -32,28 +43,33 @@ const list = (obj) => {
     console.log(`\n\n${dimText("Documentation and help for:")} \x1B[1m${objKey}
 \x1B[m---\n${keyText("Functions↓")}\n`)
     // ƒ 𝑓(𝑥) 𖨠 ➤
-    console.group(`${objKey}.`)
-    Object.keys(x.doc.functions).forEach((key) => {
-      const d = x.doc.functions[key]
-      const f = x.obj[key]
-      console.groupCollapsed(`\x1B[3;2mƒ \x1B[m${key}() \t\x1B[2m${dimText(pText(d.args))}`)
+    if(!!Object.keys(x.doc.functions).length) { // if functions found
+      console.group(`${objKey}.`)
+      Object.keys(x.doc.functions).forEach((key) => {
+        const d = x.doc.functions[key]
+        const f = x.obj[key]
+        console.groupCollapsed(`\x1B[3;2mƒ \x1B[m${key}() \t\x1B[2m${dimText(pText(d.args))}`)
 
-      console.log(`\x1B[3m${dimText(`Example${
-        d.smpl.length > 1 ? 's': ''
-        }:\x1B[m \x1B[1m${d.smpl.join(' | ')}`)}`)
-      
-      console.log(`\n\x1B[4m${dimText(`"${d.desc}"`)}\n\n`)
-      // console.log({definition: f})
+        console.log(`\x1B[3m${dimText(`Example${
+          d.smpl.length > 1 ? 's': ''
+          }:\x1B[m \x1B[1m${d.smpl.join(' | ')}`)}`)
+        
+        console.log(`\n\x1B[4m${dimText(`"${d.desc}"`)}\n\n`)
+        // console.log({definition: f})
 
+        console.groupEnd()
+      })
       console.groupEnd()
-    })
-    console.groupEnd()
+    } else {
+      console.log(`\x1B[1mNo functions on ${objKey} object\x1B[m`)
+    }
     //variables
     console.log(keyText("Variables↓"))
     // console.groupCollapsed(`${objKey}.`)
-    return x.doc.variables.reduce((acc,cur) => Object.assign(acc, {
-      [cur]: x.obj[cur]
-    }),{})
+    // return deepVariables(x.doc.variables, obj)
+    return x.doc.variables.reduce((acc,cur) => {
+      return Object.assign(acc, { [cur]: x.obj[cur] }) 
+    },{})
   }
   else { // list available objects, shelly, grid etc.
     const name = "list"

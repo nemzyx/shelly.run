@@ -1,4 +1,6 @@
 <script>
+  import { sanitizeTransform } from '../util/shelly'
+
   import F0 from '../assets/shelly/shelly-F0.png'
   import F1 from '../assets/shelly/shelly-F1.png'
   import F2 from '../assets/shelly/shelly-F2.png'
@@ -11,34 +13,32 @@
 
   let color = 'rgb(160, 78, 122)' // #a04e7a
 
-  let states = {
+  $: states = {
     "hide": {
-      key: "hide",
       msg: 'Shy shelly shell 🐢',
       animation: hide,
-      speed: 0
+      speed: 10
     },
     "idle": {
-      key: "idle",
       msg: 'Shelly is now idle 🐢',
       animation: idle,
-      speed: 0
+      speed: 20
     },
     "walk": {
-      key: "walk",
       msg: 'Walking...',
       animation: walk,
       speed: 90
     },
     "run": {
-      key: "run",
       msg: 'Running!',
       animation: run,
       speed: 250
     }
   }
 
-  let state = states["idle"]
+  $: state = 'idle'
+  $: speed = states[state].speed
+  $: animation = states[state].animation
 
   $: transform = {
     pos: { x: 50, y: 50 }, // should be 0, 0, screen / world coords
@@ -47,35 +47,30 @@
   }
 
   let cnt = 0
-  $: sprite = state["animation"][cnt]
+  $: sprite = animation[cnt]
 
   const step = () => {
     cnt++
-    cnt = cnt % state["animation"].length
+    cnt = cnt % animation.length
   }
 
   let animate
   $: {
     clearInterval(animate)
-    animate = setInterval(step, (100000 / state["animation"].length) / state["speed"])
+    animate = setInterval(step, (100000 / animation.length) / speed)
   }
 
   // state machine
-  import { sanitizeTransform } from '../util/shelly'
-  let lastKey = state.key
-  $: if (!!state.key) {
-    if(state.key !== lastKey) { // state *actually* changed
+  $:switch(state) {
+    case "run":
+      transform.pos.y += 3
+      sanitizeTransform(transform)
+      break
+  }
 
-      console.log('UPDATE STATE MACHINE')
-      switch(state.key) {
-        case "run":
-          transform.pos.y += 3
-          sanitizeTransform(transform)
-          break
-      }
-
-    }
-    lastKey = state.key // update previous key
+  const changeState = (newState) => {
+    state = newState
+    return states[newState].msg
   }
 
   // public interface --------------------------------------------------------------------
@@ -83,14 +78,14 @@
 
   $: {
     window['shelly'] = {
-      stay: () => (state = states["idle"]).msg,
-      hide: () => (state = states["hide"]).msg,
+      stay: () => changeState('idle'),
+      hide: () => changeState('hide'),
       walk: (dist) => {
-        const res = (state = states["walk"]).msg
+        const res = changeState('walk')
         if(!!!dist) return res
         return "Walk for distance" // promise that can be awaited
       },
-      run:  () => (state = states["run"]).msg,
+      run:  () => changeState('run'),
       // run:  () => { // run in current direction based on transform
       //   setInterval(() => {
       //     transform.pos.y += 1
@@ -106,23 +101,26 @@
 
     // reative console
     bindConsole(window["shelly"], 'color', color, (v) => { color = v })
-    bindConsole(window["shelly"], 'state', state, (v) => {
-      state = v
-      states[state.key] = v
-    })
-    bindConsole(window["shelly"], 'states', states, (v) => {
-      states = v
-      state = states[state.key]
-    })
+    bindConsole(window["shelly"], 'state', state, (v) => { state = v })
+    bindConsole(window["shelly"], 'speed', speed, (v) => { speed = v  })
+    // bindConsole(window["shelly"], 'states', states, (v) => { states = v })
     bindConsole(window["shelly"], 'transform', transform, (v) => {transform = v })
+    bindConsole(window["shelly"], 'animation', animation, (v) => { animation = v })
 
-    const tickState = () => { window["shelly"].state = state }
-    bindConsole(window["shelly"].state, 'key', state.key, tickState)
-    bindConsole(window["shelly"].state, 'msg', state.msg, tickState)
-    bindConsole(window["shelly"].state, 'speed', state.speed, tickState)
-    bindConsole(window["shelly"].state, 'animation', state.animation, tickState)
+    window['states'] = states
+    const tickSpeed = () => { window["shelly"].speed = states[state].speed }
+    bindConsole(window["states"].run, 'speed', states.run.speed, tickSpeed)
+    bindConsole(window["states"].walk, 'speed', states.walk.speed, tickSpeed)
+    bindConsole(window["states"].idle, 'speed', states.idle.speed, tickSpeed)
+    bindConsole(window["states"].hide, 'speed', states.hide.speed, tickSpeed)
 
-    const tickTransform = async () => {
+    const tickAnim = () => { window["shelly"].animation = states[state].animation }
+    bindConsole(window["states"].run, 'animation', states.run.animation, tickAnim)
+    bindConsole(window["states"].walk, 'animation', states.walk.animation, tickAnim)
+    bindConsole(window["states"].idle, 'animation', states.idle.animation, tickAnim)
+    bindConsole(window["states"].hide, 'animation', states.hide.animation, tickAnim)
+
+    const tickTransform = () => {
       window["shelly"].transform = sanitizeTransform(window["shelly"].transform)
     }
     bindConsole(window["shelly"].transform, 'scl', transform.scl, tickTransform)
@@ -131,6 +129,13 @@
     bindConsole(window["shelly"].transform.pos, 'x', transform.pos.x, tickTransform)
     bindConsole(window["shelly"].transform.pos, 'y', transform.pos.y, tickTransform)
   }
+
+  // side effects
+  $: if (!!state) {
+    window['shelly'].speed = speed
+    window['shelly'].animation = animation
+  }
+  $: if (!!animation) { cnt = 0 }
 </script>
 
 <div
