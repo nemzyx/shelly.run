@@ -6,10 +6,12 @@
   import F2 from '../assets/shelly/shelly-F2.png'
   import F3 from '../assets/shelly/shelly-F3.png'
   import F4 from '../assets/shelly/shelly-F4.png'
+  import F5 from '../assets/shelly/shelly-F5.png'
+  import F6 from '../assets/shelly/shelly-F6.png'
   const hide = [F0]
-  const idle = [F1]
-  const walk = [F1, F3, F1, F4]
-  const run =  [F2, F3, F2, F4]
+  const idle = [F6, F5, F5, F5, F5, F5, F5, F5, F5, F6, F5, F5, F5, F5, F5]
+  const walk = [F3, F1, F4, F1]
+  const run =  [F3, F2, F4, F2]
 
   let color = 'rgb(160, 78, 122)' // #a04e7a
 
