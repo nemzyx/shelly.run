@@ -8,6 +8,8 @@
   import F4 from '../assets/shelly/shelly-F4.png'
   import F5 from '../assets/shelly/shelly-F5.png'
   import F6 from '../assets/shelly/shelly-F6.png'
+  const proxyShellyImgs = [F0, F1, F2, F3, F4, F5, F6]
+
   const hide = [F0]
   const idle = [F6, F5, F5, F5, F5, F5, F5, F5, F5, F6, F5, F5, F5, F5, F5]
   const walk = [F3, F1, F4, F1]
@@ -148,6 +150,13 @@
   <img class="child" src={sprite} alt="shelly" />
 </div>
 
+<!-- PROXY SHELLY FOR GETTING IMAGES INTO CACHE -->
+<div style="display: none; opacity: 0;">
+  {#each proxyShellyImgs as proxySrc}
+    <img src={proxySrc} alt="proxy-img" />
+  {/each}
+</div>
+
 <style>
   #shelly {
     position: absolute;
@@ -168,7 +177,7 @@
     transform: translate(-50%, -50%);
   }
   
-  img {
+  #shelly img {
     image-rendering: pixelated;
   }  
 </style>
