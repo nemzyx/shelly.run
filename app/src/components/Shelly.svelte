@@ -9,33 +9,37 @@
   const walk = [F1, F3, F1, F4]
   const run =  [F2, F3, F2, F4]
 
+  let color = 'rgb(160, 78, 122)' // #a04e7a
+
   let states = {
     "hide": {
       key: "hide",
+      msg: 'Shy shelly shell 🐢',
       animation: hide,
-      speed: 0,
-      msg: 'Shy shelly shell 🐢'
+      speed: 0
     },
     "idle": {
       key: "idle",
+      msg: 'Shelly is now idle 🐢',
       animation: idle,
-      speed: 0,
-      msg: 'Shelly is now idle 🐢'
+      speed: 0
     },
     "walk": {
       key: "walk",
+      msg: 'Walking...',
       animation: walk,
-      speed: 90,
-      msg: 'Walking...'
+      speed: 90
     },
     "run": {
       key: "run",
+      msg: 'Running!',
       animation: run,
-      speed: 250,
-      msg: 'Running!'
+      speed: 250
     }
   }
+
   let state = states["idle"]
+
   $: transform = {
     pos: { x: 50, y: 50 }, // should be 0, 0, screen / world coords
     rot: 0,
@@ -57,14 +61,22 @@
   }
 
   // state machine
-  $: switch(state.key) {
-    case "run":
-      transform.pos.y += 3
-      transform.pos.y %= 100
-      break
-  }
+  import { sanitizeTransform } from '../util/shelly'
+  let lastKey = state.key
+  $: if (!!state.key) {
+    if(state.key !== lastKey) { // state *actually* changed
 
-  let color = 'rgb(160, 78, 122)' // #a04e7a
+      console.log('UPDATE STATE MACHINE')
+      switch(state.key) {
+        case "run":
+          transform.pos.y += 3
+          sanitizeTransform(transform)
+          break
+      }
+
+    }
+    lastKey = state.key // update previous key
+  }
 
   // public interface --------------------------------------------------------------------
   import bindConsole from '../lib/bindConsole'
@@ -102,14 +114,22 @@
       states = v
       state = states[state.key]
     })
-    bindConsole(window["shelly"], 'transform', transform, (v) => { transform = v })
-    
-    const tickTrans = () => window["shelly"].transform = window["shelly"].transform
-    bindConsole(window["shelly"].transform, 'scl', transform.scl,(v)=>{tickTrans()})
-    bindConsole(window["shelly"].transform, 'rot', transform.rot,(v)=>{tickTrans()})
-    bindConsole(window["shelly"].transform, 'pos', transform.pos,(v)=>{tickTrans()})
-    bindConsole(window["shelly"].transform.pos, 'x', transform.pos.x,(v)=>{tickTrans()})
-    bindConsole(window["shelly"].transform.pos, 'y', transform.pos.y,(v)=>{tickTrans()})
+    bindConsole(window["shelly"], 'transform', transform, (v) => {transform = v })
+
+    const tickState = () => { window["shelly"].state = state }
+    bindConsole(window["shelly"].state, 'key', state.key, tickState)
+    bindConsole(window["shelly"].state, 'msg', state.msg, tickState)
+    bindConsole(window["shelly"].state, 'speed', state.speed, tickState)
+    bindConsole(window["shelly"].state, 'animation', state.animation, tickState)
+
+    const tickTransform = async () => {
+      window["shelly"].transform = sanitizeTransform(window["shelly"].transform)
+    }
+    bindConsole(window["shelly"].transform, 'scl', transform.scl, tickTransform)
+    bindConsole(window["shelly"].transform, 'rot', transform.rot, tickTransform)
+    bindConsole(window["shelly"].transform, 'pos', transform.pos, tickTransform)
+    bindConsole(window["shelly"].transform.pos, 'x', transform.pos.x, tickTransform)
+    bindConsole(window["shelly"].transform.pos, 'y', transform.pos.y, tickTransform)
   }
 </script>
 
