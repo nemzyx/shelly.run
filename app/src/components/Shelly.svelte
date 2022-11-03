@@ -45,12 +45,13 @@
   }
 
   // state machine
-  $:switch(state) {
-    case "run":
-      transform.pos.y += 3
-      sanitizeTransform(transform)
-      break
-  }
+  // IS BROKEN WTF
+  // $:switch(state) {
+  //   case "run":
+  //     transform.pos.y += 3
+  //     transform = sanitizeTransform(transform)
+  //     break
+  // }
 
   const changeState = (newState) => {
     state = newState
