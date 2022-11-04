@@ -97,6 +97,7 @@ See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly
   <br/>
   ...
 * [ ] Add `undo()` to shelly.shell.js, save all prompts in a stack
+* [ ] Add `save()` to shelly.shell.js, save program in browser, and to file
 * [ ] Create a [website](https://kran.ai/ideas/) for everyone to post their art, online gallery
 * [ ] Improve `list()`
 * [ ] Modding community at [shelly.run/mods](https://shelly.run/mods)
@@ -141,6 +142,17 @@ setInterval(()=>{
 
     shelly.transform.rot = (360/Math.PI*0.5)*t
 }, 100)
+```
+
+### Easter Egg 🥚🐰:
+```javascript
+COL=['orange','blue','hotpink','cyan','green','red']
+index=0
+setInterval(() => {
+    shelly.color = COL[index]
+    index++
+    index %= COL.length
+}, 40)
 ```
 
 <br />
