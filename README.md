@@ -144,7 +144,7 @@ setInterval(()=>{
 }, 100)
 ```
 
-### Easter Egg 🥚🐰:
+### Easter Egg 🥚🐰 Only for hackers
 ```javascript
 COL=['orange','blue','hotpink','cyan','green','red']
 index=0
@@ -153,6 +153,18 @@ setInterval(() => {
     index++
     index %= COL.length
 }, 40)
+
+F0 = 'https://shelly.run/skins/hacker/F0.png'
+F1 = 'https://shelly.run/skins/hacker/F1.png'
+F2 = 'https://shelly.run/skins/hacker/F2.png'
+F3 = 'https://shelly.run/skins/hacker/F3.png'
+F4 = 'https://shelly.run/skins/hacker/F4.png'
+F5 = 'https://shelly.run/skins/hacker/F5.png'
+F6 = 'https://shelly.run/skins/hacker/F6.png'
+states.run.animation = [F3,F2,F4,F2]
+states.walk.animation = [F3,F1,F4,F1]
+states.idle.animation = [F6,F5,F5,F5,F5,F5,F5,F5,F5,F6,F5,F5,F5,F5,F5]
+states.hide.animation = [F0]
 ```
 
 <br />
