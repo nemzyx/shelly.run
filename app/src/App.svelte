@@ -5,13 +5,8 @@
 </script>
 
 <main>
+  <!-- <h1>shelly.run</h1> -->
   <Grid />
-  <h1>shelly.run</h1>
-  <Counter />
-  <!-- TO DO: after shelly is finished    -->
-  <!--        make another shelly to load -->
-  <!--        with delay and all images   -->
-  <!--        with display: none          -->
   <Shelly />
 </main>
 
