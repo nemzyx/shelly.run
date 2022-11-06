@@ -86,7 +86,7 @@ const list = (obj) => {
     console.groupEnd()
     console.log(keyTxt2("Available objects↓"))
     console.log(`%c\x1B[1m${availbl(keys
-      .reduce((acc,cur) => `${acc}\n ${cur} \n`,'').slice(0, -1))}\n\n`,
+      .reduce((acc,cur) => `${acc}\n list( ${cur} ) \n`,'').slice(0, -1))}\n\n`,
       "font-size: 200%;")
     // console.log(`%c${keys
     //   .reduce((acc,cur) => `${acc} list(${cur}) \n\n`,'').slice(0, -1)}\n\n`,
