@@ -1,6 +1,6 @@
 <script>
   export let s = 17.73
-  let pixels = [];
+  let pixels = []
   $: ss = s*5
 
   // reactive console -----------------------------------
@@ -8,7 +8,6 @@
   
   window['grid'] = {
     // maddie was heeerreee
-    // todo : migrate to a canvas api to make it faster (this is fine for now)
     // from my testing, this can run a video (56x40) at 30fps (bad apple lol)
     // it also handles screen capture pretty well (yes, doom was played on this)
     // another todo : add my super-cool examples to the docs (maybe in the readme?)
@@ -35,7 +34,7 @@
         return 'Invalid argument'
       }
       if (!sourcePx.every(p => p.hasOwnProperty('x') && p.hasOwnProperty('y') && p.hasOwnProperty('color'))) {
-        return 'Invalid pixel format';
+        return 'Invalid pixel format'
       }        
       pixels = sourcePx
       return 'Pixels written'
@@ -76,7 +75,6 @@
   <rect width="100%" height="100%" fill="url(#grid)" />
 </svg>
 
-<!-- this is pretty slow . todo: canvas api? :3c -->
 {#each pixels as { x, y, color }}
   <div
     class="pixel"

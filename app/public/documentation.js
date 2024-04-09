@@ -54,14 +54,14 @@ const documentationObject = (() => {
           smpl: ["grid.clearPixel(0, 0)"],
           args: ["x", "y"]
         },
-        writePixels: {
+        drawPixels: {
           desc: "Write an array of pixels to the grid. Faster than running drawPixel multiple times",
-          smpl: [`grid.writePixels([{ x: 0, y: 0, color: "red" }, { x: 1, y: 0, color: "rgb(0, 255, 0)" }])`],
+          smpl: [`grid.drawPixels([{ x: 0, y: 0, color: "red" }, { x: 1, y: 0, color: "rgb(0, 255, 0)" }])`],
           args: ["pixels"]
         },
-        clearScreen: {
+        clearPixels: {
           desc: "Clears the entire grid",
-          smpl: ["grid.clearScreen()"],
+          smpl: ["grid.clearPixels()"],
           args: []
         }
       },
