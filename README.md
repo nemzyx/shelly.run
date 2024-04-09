@@ -53,7 +53,7 @@ Shelly will react to the functions and variables you invoke or modify.
 <img src="images/screenshot.gif" alt="shelly.run">
 
 One of the major technical innovations making shelly.run possible, is the *reactive console bindings*. <br />
-Learn more about **reactive browser console** by seing it in action on this [Svelte REPL](https://svelte.dev/repl/e139ee91c1834124a2dcf891c2049b83?version=3.52.0) or get `bindConsole.js` from this [Gist](https://gist.github.com/ferry-creator/625ef854a899653d5acf652b813f784f).
+Learn more about **reactive browser console** by seing it in action on this [Svelte REPL](https://svelte.dev/repl/e139ee91c1834124a2dcf891c2049b83?version=3.52.0) or get `bindConsole.js` from this [Gist](https://gist.github.com/nemzyx/625ef854a899653d5acf652b813f784f).
 
 See `bindConsole.js` used in the wild on this repo at `app/src/components/Shelly.svelte`
 
