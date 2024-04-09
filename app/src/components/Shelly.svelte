@@ -1,47 +1,49 @@
 <script>
-  import { sanitizeTransform, defaultStates } from '../util/shelly'
+  import { sanitizeTransform, defaultStates } from "../util/shelly";
 
-  import F0 from '../assets/shelly/shelly-F0.png'
-  import F1 from '../assets/shelly/shelly-F1.png'
-  import F2 from '../assets/shelly/shelly-F2.png'
-  import F3 from '../assets/shelly/shelly-F3.png'
-  import F4 from '../assets/shelly/shelly-F4.png'
-  import F5 from '../assets/shelly/shelly-F5.png'
-  import F6 from '../assets/shelly/shelly-F6.png'
-  const proxyShellyImgs = [F0, F1, F2, F3, F4, F5, F6]
+  import F0 from "../assets/shelly/shelly-F0.png";
+  import F1 from "../assets/shelly/shelly-F1.png";
+  import F2 from "../assets/shelly/shelly-F2.png";
+  import F3 from "../assets/shelly/shelly-F3.png";
+  import F4 from "../assets/shelly/shelly-F4.png";
+  import F5 from "../assets/shelly/shelly-F5.png";
+  import F6 from "../assets/shelly/shelly-F6.png";
+  const proxyShellyImgs = [F0, F1, F2, F3, F4, F5, F6];
 
-  const hide = [F0]
-  const idle = [F6, F5, F5, F5, F5, F5, F5, F5, F5, F6, F5, F5, F5, F5, F5]
-  const walk = [F3, F1, F4, F1]
-  const run =  [F3, F2, F4, F2]
-  const animCollection = { hide, idle, walk, run }
+  const hide = [F0];
+  const idle = [F6, F5, F5, F5, F5, F5, F5, F5, F5, F6, F5, F5, F5, F5, F5];
+  const walk = [F3, F1, F4, F1];
+  const run = [F3, F2, F4, F2];
+  const animCollection = { hide, idle, walk, run };
 
-  let color = 'rgb(160, 78, 122)' // #a04e7a
+  export let pixels = [];
 
-  $: states = defaultStates(animCollection)
+  let color = "rgb(160, 78, 122)"; // #a04e7a
 
-  $: state = 'idle'
-  $: speed = states[state].speed
-  $: animation = states[state].animation
+  $: states = defaultStates(animCollection);
+
+  $: state = "idle";
+  $: speed = states[state].speed;
+  $: animation = states[state].animation;
 
   $: transform = {
     pos: { x: 50, y: 50 }, // should be 0, 0, screen / world coords
     rot: 0,
-    scl: 1
-  }
+    scl: 1,
+  };
 
-  let cnt = 0
-  $: sprite = animation[cnt]
+  let cnt = 0;
+  $: sprite = animation[cnt];
 
   const step = () => {
-    cnt++
-    cnt = cnt % animation.length
-  }
+    cnt++;
+    cnt = cnt % animation.length;
+  };
 
-  let animate
+  let animate;
   $: {
-    clearInterval(animate)
-    animate = setInterval(step, (100000 / animation.length) / speed)
+    clearInterval(animate);
+    animate = setInterval(step, 100000 / animation.length / speed);
   }
 
   // state machine
@@ -54,23 +56,70 @@
   // }
 
   const changeState = (newState) => {
-    state = newState
-    return states[newState].msg
-  }
+    state = newState;
+    return states[newState].msg;
+  };
 
   // public interface --------------------------------------------------------------------
-  import bindConsole from '../lib/bindConsole'
+  import bindConsole from "../lib/bindConsole";
+
+  // event handler
 
   $: {
-    window['shelly'] = {
-      stay: () => changeState('idle'),
-      hide: () => changeState('hide'),
+    window["shelly"] = {
+      stay: () => changeState("idle"),
+      hide: () => changeState("hide"),
       walk: (dist) => {
-        const res = changeState('walk')
-        if(!!!dist) return res
-        return "Walk for distance" // promise that can be awaited
+        const res = changeState("walk");
+        if (!!!dist) return res;
+        return "Walk for distance"; // promise that can be awaited
       },
-      run:  () => changeState('run'),
+      run: () => changeState("run"),
+      drawPixel: (x, y, color) => {
+        if (typeof x !== "number" || typeof y !== "number") {
+          console.error("x and y must be numbers");
+          return;
+        }
+        if (typeof color !== "string") {
+          console.error("color must be a string");
+          return;
+        }
+        pixels.push({ x, y, color });
+        pixels = pixels;
+      },
+      clearPixel: (x, y) => {
+        if (typeof x !== "number" || typeof y !== "number") {
+          console.error("x and y must be numbers");
+          return;
+        }
+        pixels = pixels.filter((p) => p.x !== x && p.y !== y);
+      },
+      clearScreen: () => {
+        pixels = [];
+      },
+      writePixels: (sourcePx) => {
+        if (typeof sourcePx !== "object") {
+          console.error("pixels must be an array of objects");
+          return;
+        }
+        if (!sourcePx.length) {
+          console.error("pixels array must not be empty");
+          return;
+        }
+        if (
+          !sourcePx.every(
+            (p) => typeof p.x === "number" && typeof p.y === "number"
+          )
+        ) {
+          console.error("each pixel must have x and y as numbers");
+          return;
+        }
+        if (!sourcePx.every((p) => typeof p.color === "string")) {
+          console.error("each pixel must have a color as a string");
+          return;
+        }
+        pixels = sourcePx;
+      },
       // run:  () => { // run in current direction based on transform
       //   setInterval(() => {
       //     transform.pos.y += 1
@@ -82,56 +131,119 @@
       //   transform.rot += 1
       //   transform.rot = transform.rot % 360
       // }, 30),
-    }
+    };
 
     // reative console
-    bindConsole(window["shelly"], 'color', color, (v) => { color = v })
-    bindConsole(window["shelly"], 'state', state, (v) => { state = v })
-    bindConsole(window["shelly"], 'speed', speed, (v) => { speed = v  })
+    bindConsole(window["shelly"], "color", color, (v) => {
+      color = v;
+    });
+    bindConsole(window["shelly"], "state", state, (v) => {
+      state = v;
+    });
+    bindConsole(window["shelly"], "speed", speed, (v) => {
+      speed = v;
+    });
     // bindConsole(window["shelly"], 'states', states, (v) => { states = v })
-    bindConsole(window["shelly"], 'transform', transform, (v) => {transform = v })
-    bindConsole(window["shelly"], 'animation', animation, (v) => { animation = v })
+    bindConsole(window["shelly"], "transform", transform, (v) => {
+      transform = v;
+    });
+    bindConsole(window["shelly"], "animation", animation, (v) => {
+      animation = v;
+    });
 
-    window['states'] = {
+    window["states"] = {
       ...states,
       reset: () => {
-        console.log(defaultStates(animCollection))
-        window['states'] = {
+        console.log(defaultStates(animCollection));
+        window["states"] = {
           ...defaultStates(animCollection),
-          reset: window['states'].reset
-        }
-        states = window['states']
-        return 'Reset back to default states'
-      }
-    }
-    const tickSpeed = () => { window["shelly"].speed = states[state].speed }
-    bindConsole(window["states"].run, 'speed', states.run.speed, tickSpeed)
-    bindConsole(window["states"].walk, 'speed', states.walk.speed, tickSpeed)
-    bindConsole(window["states"].idle, 'speed', states.idle.speed, tickSpeed)
-    bindConsole(window["states"].hide, 'speed', states.hide.speed, tickSpeed)
+          reset: window["states"].reset,
+        };
+        states = window["states"];
+        return "Reset back to default states";
+      },
+    };
+    const tickSpeed = () => {
+      window["shelly"].speed = states[state].speed;
+    };
+    bindConsole(window["states"].run, "speed", states.run.speed, tickSpeed);
+    bindConsole(window["states"].walk, "speed", states.walk.speed, tickSpeed);
+    bindConsole(window["states"].idle, "speed", states.idle.speed, tickSpeed);
+    bindConsole(window["states"].hide, "speed", states.hide.speed, tickSpeed);
 
-    const tickAnim = () => { window["shelly"].animation = states[state].animation }
-    bindConsole(window["states"].run, 'animation', states.run.animation, tickAnim)
-    bindConsole(window["states"].walk, 'animation', states.walk.animation, tickAnim)
-    bindConsole(window["states"].idle, 'animation', states.idle.animation, tickAnim)
-    bindConsole(window["states"].hide, 'animation', states.hide.animation, tickAnim)
+    const tickAnim = () => {
+      window["shelly"].animation = states[state].animation;
+    };
+    bindConsole(
+      window["states"].run,
+      "animation",
+      states.run.animation,
+      tickAnim
+    );
+    bindConsole(
+      window["states"].walk,
+      "animation",
+      states.walk.animation,
+      tickAnim
+    );
+    bindConsole(
+      window["states"].idle,
+      "animation",
+      states.idle.animation,
+      tickAnim
+    );
+    bindConsole(
+      window["states"].hide,
+      "animation",
+      states.hide.animation,
+      tickAnim
+    );
 
     const tickTransform = () => {
-      window["shelly"].transform = sanitizeTransform(window["shelly"].transform)
-    }
-    bindConsole(window["shelly"].transform, 'scl', transform.scl, tickTransform)
-    bindConsole(window["shelly"].transform, 'rot', transform.rot, tickTransform)
-    bindConsole(window["shelly"].transform, 'pos', transform.pos, tickTransform)
-    bindConsole(window["shelly"].transform.pos, 'x', transform.pos.x, tickTransform)
-    bindConsole(window["shelly"].transform.pos, 'y', transform.pos.y, tickTransform)
+      window["shelly"].transform = sanitizeTransform(
+        window["shelly"].transform
+      );
+    };
+    bindConsole(
+      window["shelly"].transform,
+      "scl",
+      transform.scl,
+      tickTransform
+    );
+    bindConsole(
+      window["shelly"].transform,
+      "rot",
+      transform.rot,
+      tickTransform
+    );
+    bindConsole(
+      window["shelly"].transform,
+      "pos",
+      transform.pos,
+      tickTransform
+    );
+    bindConsole(
+      window["shelly"].transform.pos,
+      "x",
+      transform.pos.x,
+      tickTransform
+    );
+    bindConsole(
+      window["shelly"].transform.pos,
+      "y",
+      transform.pos.y,
+      tickTransform
+    );
   }
 
   // side effects
   $: if (!!state) {
-    window['shelly'].speed = speed
-    window['shelly'].animation = animation
+    window["shelly"].speed = speed;
+    window["shelly"].animation = animation;
   }
-  $: if (!!animation) { cnt = 0 }
+  $: if (!!animation) {
+    cnt = 0;
+  }
 </script>
 
 <div
@@ -139,15 +251,19 @@
   style={`
     top: ${transform.pos.y}%;
     left: ${transform.pos.x}%;
-    height: ${80*transform.scl}px;
+    height: ${80 * transform.scl}px;
     transform: rotate(${transform.rot}deg);
   `}
 >
-  <div class="child" id="color" style={`
+  <div
+    class="child"
+    id="color"
+    style={`
     background-color: ${color};
-    width: ${80*transform.scl}px;
-    height: ${80*transform.scl}px;
-  `} />
+    width: ${80 * transform.scl}px;
+    height: ${80 * transform.scl}px;
+  `}
+  />
   <img class="child" src={sprite} alt="shelly" />
 </div>
 
@@ -169,7 +285,7 @@
     border-radius: 50%;
     transform: translate(-50%, -60%) scale(0.5, 0.6);
   }
-  
+
   .child {
     position: absolute;
     top: 0;
@@ -177,8 +293,8 @@
     height: 100%;
     transform: translate(-50%, -50%);
   }
-  
+
   #shelly img {
     image-rendering: pixelated;
-  }  
+  }
 </style>
