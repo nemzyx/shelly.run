@@ -144,7 +144,7 @@ setInterval(()=>{
 }, 100)
 ```
 
-### Easter Egg 🥚🐰 Only for hackers
+##### Easter Egg 🥚🐰 Only for hackers
 ```javascript
 COL=['orange','blue','hotpink','cyan','green','red']
 index=0
@@ -153,7 +153,6 @@ setInterval(() => {
     index++
     index %= COL.length
 }, 40)
-
 F0 = 'https://shelly.run/skins/hacker/F0.png'
 F1 = 'https://shelly.run/skins/hacker/F1.png'
 F2 = 'https://shelly.run/skins/hacker/F2.png'
@@ -167,6 +166,56 @@ states.idle.animation = [F6,F5,F5,F5,F5,F5,F5,F5,F5,F6,F5,F5,F5,F5,F5]
 states.hide.animation = [F0]
 ```
 
+##### Screenshare (Chrome only, make sure to zoom out to 25%!)
+```javascript
+const width = 120;
+const height = 67;
+
+document.body.style.zoom = 0.6;
+
+// This is a native browser API, called the "Media Capture and Streams API". 
+const stream = await navigator.mediaDevices.getDisplayMedia();
+// Canvases are a way to manipulate images in the browser.
+// In this case, we are rendering the user's screen to the canvas, then
+// resizing it down to the value of the width and height variables (120x67)
+const canvas = document.createElement("canvas");
+canvas.style.position = "fixed";
+canvas.width = width;
+canvas.height = height;
+const ctx = canvas.getContext("2d");
+const track = stream.getVideoTracks()[0]; // MediaStream.getVideoTracks()[0]
+const processor = new MediaStreamTrackProcessor(track);
+const reader = processor.readable.getReader();
+readChunk();
+function readChunk() {
+	reader.read().then(({ done, value }) => {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(value, 0, 0, width, height);
+		// iterate over pixels
+		const imageData = ctx.getImageData(0, 0, width, height);
+		const data = imageData.data;
+		const colorData = [];
+		for (let i = 0; i < data.length; i += 4) {
+			const x = (i / 4) % width;
+			const y = Math.floor(i / 4 / width);
+			const r = data[i];
+			const g = data[i + 1];
+			const b = data[i + 2];
+			const hex = ((r << 16) | (g << 8) | b).toString(16);
+			colorData.push({
+				x,
+				y,
+				color: `#${hex.padStart(6, "0")}`,
+			});
+		}
+		grid.writePixels(colorData);
+		value.close();
+		if (!done) {
+			readChunk();
+		}
+	});
+}
+```
 <br />
 
 ## License
