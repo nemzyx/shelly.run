@@ -1,11 +1,45 @@
 <script>
   export let s = 17.73
+  let pixels = []
   $: ss = s*5
 
   // reactive console -----------------------------------
   import bindConsole from '../lib/bindConsole'
   
-  window['grid'] = {}
+  window['grid'] = {
+    // maddie was heeerreee
+    // from my testing, this can run a video (56x40) at 30fps (bad apple lol)
+    // it also handles screen capture pretty well (yes, doom was played on this)
+    // another todo : add my super-cool examples to the docs (maybe in the readme?)
+    drawPixel: (x, y, color) => {
+      if (typeof x !== 'number' || typeof y !== 'number' || typeof color !== 'string') {
+        return 'Invalid arguments'
+      }
+      pixels = [...pixels, { x, y, color }]
+      return `Pixel drawn at ${x}, ${y} with color ${color}`
+    },
+    clearPixel: (x, y) => {
+      if (typeof x !== 'number' || typeof y !== 'number') {
+        return 'Invalid arguments'
+      }
+      pixels = pixels.filter(p => p.x !== x && p.y !== y)
+      return `Pixel cleared at ${x}, ${y}`
+    },
+    clearScreen: () => {
+      pixels = []
+      return 'Screen cleared'
+    },
+    writePixels: (sourcePx) => {
+      if (!Array.isArray(sourcePx)) {
+        return 'Invalid argument'
+      }
+      if (!sourcePx.every(p => p.hasOwnProperty('x') && p.hasOwnProperty('y') && p.hasOwnProperty('color'))) {
+        return 'Invalid pixel format'
+      }        
+      pixels = sourcePx
+      return 'Pixels written'
+    }
+  }
   bindConsole(window['grid'], 's', s, (v) => {s = v})
 
   // window['grid'] = {
@@ -40,6 +74,20 @@
       
   <rect width="100%" height="100%" fill="url(#grid)" />
 </svg>
+
+{#each pixels as { x, y, color }}
+  <div
+    class="pixel"
+    style="
+      position: absolute;
+      top: {y * ss}px;
+      left: {x * ss}px;
+      width: {ss}px;
+      height: {ss}px;
+      background-color: {color};
+    "
+  />
+{/each}
 
 <style>
   svg {
